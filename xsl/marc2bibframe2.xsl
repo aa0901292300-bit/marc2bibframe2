@@ -8,6 +8,7 @@
                 xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:date="http://exslt.org/dates-and-times"
+                xmlns:lclocal="http://id.loc.gov/ontologies/lclocal/"
                 extension-element-prefixes="date"
                 exclude-result-prefixes="xsl marc">
 
@@ -42,7 +43,7 @@
       LoC for conversion. By default these fields will not be
       converted unless this parameter evaluates to true()
   -->
-  <xsl:param name="localfields" select="false()" />
+  <xsl:param name="localfields" select="true()"/>
   
   <!--
       datestamp for generationProcess property of Work adminMetadata
@@ -51,10 +52,11 @@
   -->
   <xsl:param name="pGenerationDatestamp">
     <xsl:choose>
-      
+      <!--
       <xsl:when test="function-available('date:date-time')">
         <xsl:value-of select="date:date-time()"/>
       </xsl:when>
+      -->
       <xsl:when test="function-available('current-dateTime')">
         <xsl:value-of select="current-dateTime()"/>
       </xsl:when>
@@ -63,7 +65,9 @@
   
   <!-- Output serialization. Currently only "rdfxml" is supported -->
   <xsl:param name="serialization" select="'rdfxml'"/>
-
+  <!-- suppression is a local param -->
+  <xsl:param name="suppressed"></xsl:param> 
+  
   <xsl:include href="variables.xsl"/>
   <xsl:include href="utils.xsl"/>
   <xsl:include href="ConvSpec-ControlSubfields.xsl"/>
@@ -89,6 +93,8 @@
   <xsl:include href="ConvSpec-880.xsl"/>
   <xsl:include href="ConvSpec-Process6-Series.xsl"/>
   <xsl:include href="ConvSpec-Process8-ProvAct.xsl"/>
+  <xsl:include href="lc-local-fields.xsl"/>
+
   <xsl:template match="/">
 
     <!-- RDF/XML document frame -->
